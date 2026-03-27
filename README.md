@@ -20,13 +20,9 @@ A modern, browser-based tool to estimate the **hardware requirements (GPU, RAM, 
 * 💻 GPU recommendations based on requirements
 * 📱 Responsive and modern UI
 
----
 
-## 🖥️ Screenshot
 
-*Add a screenshot here after deployment (optional)*
 
----
 
 ## 📂 Project Structure
 
@@ -55,7 +51,7 @@ https://jaykumar122.github.io/LLM-System-Requirements-Calculator/
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/LLM-System-Requirements-Calculator.git
+git clone https://github.com/Jaykumar122/Rock-Paper-Scissors-Game.git
 ```
 
 2. Open the folder
@@ -113,18 +109,7 @@ No frameworks, no dependencies — runs entirely in the browser.
 * More model presets
 * Better accuracy tuning
 
----
 
-## 🤝 Contributing
-
-Contributions are welcome!
-
-1. Fork the repo
-2. Create a branch
-3. Make your changes
-4. Submit a pull request
-
----
 
 ## 📜 License
 
