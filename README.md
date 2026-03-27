@@ -6,7 +6,7 @@ A modern, browser-based tool to estimate the **hardware requirements (GPU, RAM, 
 
 ## 🌐 Live Demo
 
-👉 https://your-username.github.io/LLM-System-Requirements-Calculator/
+👉 https://jaykumar122.github.io/LLM-System-Requirements-Calculator/
 
 ---
 
