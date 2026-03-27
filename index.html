@@ -1,0 +1,502 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #111418;
+    --bg3: #181c22;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #00d4aa;
+    --accent2: #0088ff;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body { background: var(--bg); color: var(--text); font-family: var(--font-head); min-height: 100vh; }
+
+  .app { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .header { display: flex; align-items: flex-end; gap: 1rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
+  .header-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .header-logo svg { width: 24px; height: 24px; }
+  .header-text h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .header-text p { font-size: 13px; color: var(--muted); margin-top: 2px; font-family: var(--font-mono); }
+  .header-badge { margin-left: auto; background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.25); color: var(--accent); font-size: 11px; font-family: var(--font-mono); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+  .layout { display: grid; grid-template-columns: 380px 1fr; gap: 1.5rem; }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+  .panel-title { font-size: 11px; font-family: var(--font-mono); color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; }
+  .panel-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label { font-size: 12px; color: var(--muted); font-family: var(--font-mono); margin-bottom: 8px; display: block; letter-spacing: 0.3px; }
+
+  select, input[type=number], input[type=range] { width: 100%; appearance: none; -webkit-appearance: none; }
+  select, input[type=number] {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--font-head);
+    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  select:focus, input[type=number]:focus { border-color: var(--accent); }
+  select option { background: #1a1e24; }
+
+  .presets-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .preset-btn {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; cursor: pointer; text-align: left; transition: all 0.15s; color: var(--text);
+  }
+  .preset-btn:hover { border-color: var(--border2); background: #1e232b; }
+  .preset-btn.active { border-color: var(--accent); background: rgba(0,212,170,0.06); }
+  .preset-name { font-size: 12px; font-weight: 600; }
+  .preset-sub { font-size: 10px; color: var(--muted); font-family: var(--font-mono); margin-top: 2px; }
+
+  .toggle-row { display: flex; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 3px; gap: 3px; }
+  .toggle-btn {
+    flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer;
+    font-family: var(--font-head); font-size: 13px; font-weight: 500;
+    background: transparent; color: var(--muted); transition: all 0.15s;
+  }
+  .toggle-btn.active { background: var(--accent); color: #000; font-weight: 600; }
+
+  .precision-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .prec-btn {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 6px;
+    padding: 9px 6px; cursor: pointer; text-align: center; transition: all 0.15s; color: var(--text);
+  }
+  .prec-btn:hover { border-color: var(--border2); }
+  .prec-btn.active { border-color: var(--accent2); background: rgba(0,136,255,0.08); color: var(--accent2); }
+  .prec-label { font-size: 12px; font-weight: 600; }
+  .prec-sub { font-size: 9px; color: var(--muted); font-family: var(--font-mono); margin-top: 2px; }
+
+  .calc-btn {
+    width: 100%; padding: 13px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 8px; color: #000; font-family: var(--font-head);
+    font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 1rem;
+    letter-spacing: 0.3px; transition: opacity 0.15s;
+  }
+  .calc-btn:hover { opacity: 0.9; }
+
+  .results-panel { display: flex; flex-direction: column; gap: 1rem; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .stat-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+  .stat-label { font-size: 10px; font-family: var(--font-mono); color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
+  .stat-value { font-size: 26px; font-weight: 700; margin-top: 4px; line-height: 1; }
+  .stat-unit { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 2px; }
+  .stat-hint { font-size: 11px; color: var(--muted); margin-top: 6px; font-family: var(--font-mono); }
+
+  .verdict-card { border-radius: 10px; padding: 1.25rem; border: 1px solid; }
+  .verdict-card.runnable { background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.25); }
+  .verdict-card.borderline { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.25); }
+  .verdict-card.notrun { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.25); }
+  .verdict-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .verdict-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-green { background: var(--success); box-shadow: 0 0 8px var(--success); }
+  .dot-amber { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+  .dot-red { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+  .verdict-sub { font-size: 12px; margin-top: 6px; font-family: var(--font-mono); opacity: 0.75; }
+
+  .gpu-recs { margin-top: 1rem; }
+  .gpu-rec-title { font-size: 10px; font-family: var(--font-mono); color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px; }
+  .gpu-list { display: flex; flex-direction: column; gap: 6px; }
+  .gpu-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; padding: 9px 12px; }
+  .gpu-name { font-size: 13px; font-weight: 500; }
+  .gpu-vram { font-size: 11px; font-family: var(--font-mono); color: var(--muted); }
+  .gpu-badge { font-size: 10px; font-family: var(--font-mono); padding: 3px 8px; border-radius: 20px; }
+  .badge-green { background: rgba(16,185,129,0.12); color: var(--success); border: 1px solid rgba(16,185,129,0.2); }
+  .badge-amber { background: rgba(245,158,11,0.12); color: var(--warn); border: 1px solid rgba(245,158,11,0.2); }
+  .badge-red { background: rgba(239,68,68,0.12); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); }
+
+  .perf-bar-wrap { margin-top: 1rem; }
+  .perf-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .perf-label { font-size: 11px; font-family: var(--font-mono); color: var(--muted); }
+  .perf-val { font-size: 12px; font-weight: 600; }
+  .bar-track { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
+  .compare-section { margin-top: 1.5rem; }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: var(--font-mono); }
+  .compare-table th { text-align: left; padding: 8px 10px; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; font-size: 10px; }
+  .compare-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr.highlight td { background: rgba(0,212,170,0.04); }
+
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 12px; opacity: 0.4; }
+  .empty-icon { font-size: 40px; }
+  .empty-text { font-size: 13px; font-family: var(--font-mono); }
+
+  .ctx-row { display: flex; align-items: center; gap: 10px; }
+  .ctx-row input[type=range] { flex: 1; height: 4px; border-radius: 2px; outline: none; background: var(--border2); accent-color: var(--accent); }
+  .ctx-out { font-size: 13px; font-family: var(--font-mono); color: var(--accent); min-width: 60px; text-align: right; }
+
+  .section-gap { margin-top: 1.25rem; }
+</style>
+
+<div class="app">
+  <div class="header">
+    <div class="header-logo">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="8" width="20" height="12" rx="2" stroke="#000" stroke-width="2"/>
+        <path d="M6 8V6a2 2 0 012-2h8a2 2 0 012 2v2" stroke="#000" stroke-width="2"/>
+        <circle cx="8" cy="14" r="1.5" fill="#000"/>
+        <circle cx="12" cy="14" r="1.5" fill="#000"/>
+        <circle cx="16" cy="14" r="1.5" fill="#000"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>LLM System Requirements Calculator</h1>
+      <p>estimate hardware needs for running LLMs locally</p>
+    </div>
+    <div class="header-badge">v1.0 · 2025</div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="panel">
+        <div class="panel-title">Quick presets</div>
+        <div class="presets-grid" id="presetsGrid"></div>
+
+        <div class="panel-title">Configuration</div>
+
+        <div class="form-group">
+          <label class="form-label">hardware target</label>
+          <div class="toggle-row">
+            <button class="toggle-btn active" onclick="setHW('gpu',this)">GPU</button>
+            <button class="toggle-btn" onclick="setHW('cpu',this)">CPU</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">model size (billions of parameters)</label>
+          <select id="modelSizeSelect" onchange="onModelChange()">
+            <option value="">— select —</option>
+            <option value="1">1B params</option>
+            <option value="3">3B params</option>
+            <option value="4">4B params</option>
+            <option value="7">7B params</option>
+            <option value="8">8B params</option>
+            <option value="13">13B params</option>
+            <option value="14">14B params</option>
+            <option value="22">22B params</option>
+            <option value="30">30B params</option>
+            <option value="34">34B params</option>
+            <option value="70">70B params</option>
+            <option value="72">72B params</option>
+            <option value="180">180B params</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="customWrap" style="display:none">
+          <label class="form-label">custom parameter count (B)</label>
+          <input type="number" id="customB" min="0.1" step="0.1" placeholder="e.g. 65" oninput="calculate()">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">quantization / precision</label>
+          <div class="precision-grid" id="precGrid"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">context length (tokens): <span id="ctxLabel">4096</span></label>
+          <div class="ctx-row">
+            <input type="range" id="ctxSlider" min="512" max="131072" step="512" value="4096" oninput="onCtx(this.value)">
+            <span class="ctx-out" id="ctxOut">4 K</span>
+          </div>
+        </div>
+
+        <button class="calc-btn" onclick="calculate()">Calculate Requirements →</button>
+      </div>
+    </div>
+
+    <div class="results-panel">
+      <div class="panel" id="resultsArea">
+        <div class="panel-title">Results</div>
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">⚙</div>
+          <div class="empty-text">configure a model and click calculate</div>
+        </div>
+        <div id="resultsContent" style="display:none"></div>
+      </div>
+
+      <div class="panel" id="comparePanel">
+        <div class="panel-title">Model comparison</div>
+        <div id="compareContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRESETS = [
+  { name: 'LLaMA 3.1 8B', params: 8, precision: 'q4', context: 8192, color: '#00d4aa' },
+  { name: 'Mistral 7B', params: 7, precision: 'int8', context: 4096, color: '#0088ff' },
+  { name: 'Gemma 2 9B', params: 9, precision: 'q4', context: 8192, color: '#a855f7' },
+  { name: 'LLaMA 3.1 70B', params: 70, precision: 'q4', context: 4096, color: '#f59e0b' },
+  { name: 'Mistral 22B', params: 22, precision: 'fp16', context: 4096, color: '#ef4444' },
+  { name: 'Phi-3 Mini 3.8B', params: 3.8, precision: 'q4', context: 4096, color: '#10b981' },
+];
+
+const PRECISIONS = [
+  { id: 'fp32', label: 'FP32', sub: '4 bytes', bytes: 4 },
+  { id: 'fp16', label: 'FP16', sub: '2 bytes', bytes: 2 },
+  { id: 'int8', label: 'INT8', sub: '1 byte', bytes: 1 },
+  { id: 'q4', label: '4-bit', sub: '0.5 byte', bytes: 0.5 },
+];
+
+const GPU_DB = [
+  { name: 'NVIDIA RTX 3060', vram: 12 },
+  { name: 'NVIDIA RTX 3060 Ti', vram: 8 },
+  { name: 'NVIDIA RTX 3070', vram: 8 },
+  { name: 'NVIDIA RTX 3080', vram: 10 },
+  { name: 'NVIDIA RTX 3090', vram: 24 },
+  { name: 'NVIDIA RTX 4060', vram: 8 },
+  { name: 'NVIDIA RTX 4070', vram: 12 },
+  { name: 'NVIDIA RTX 4070 Ti', vram: 12 },
+  { name: 'NVIDIA RTX 4080', vram: 16 },
+  { name: 'NVIDIA RTX 4090', vram: 24 },
+  { name: 'NVIDIA A10', vram: 24 },
+  { name: 'NVIDIA A100 40GB', vram: 40 },
+  { name: 'NVIDIA A100 80GB', vram: 80 },
+  { name: 'NVIDIA H100 80GB', vram: 80 },
+  { name: 'Apple M2 Pro (unified)', vram: 32 },
+  { name: 'Apple M3 Max (unified)', vram: 128 },
+];
+
+let state = { hw: 'gpu', params: null, precision: 'q4', ctx: 4096 };
+
+function initPresets() {
+  const g = document.getElementById('presetsGrid');
+  g.innerHTML = PRESETS.map((p, i) => `
+    <button class="preset-btn" onclick="applyPreset(${i})" id="preset_${i}">
+      <div class="preset-name">${p.name}</div>
+      <div class="preset-sub">${p.params}B · ${p.precision.toUpperCase()}</div>
+    </button>`).join('');
+}
+
+function initPrec() {
+  const g = document.getElementById('precGrid');
+  g.innerHTML = PRECISIONS.map(p => `
+    <button class="prec-btn ${p.id === state.precision ? 'active' : ''}" onclick="setPrec('${p.id}',this)" id="prec_${p.id}">
+      <div class="prec-label">${p.label}</div>
+      <div class="prec-sub">${p.sub}</div>
+    </button>`).join('');
+}
+
+function setHW(hw, btn) {
+  state.hw = hw;
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setPrec(id, btn) {
+  state.precision = id;
+  document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function onCtx(v) {
+  state.ctx = parseInt(v);
+  const k = (v/1000).toFixed(0);
+  const display = v >= 1024 ? k + ' K' : v;
+  document.getElementById('ctxLabel').textContent = display;
+  document.getElementById('ctxOut').textContent = display;
+}
+
+function applyPreset(i) {
+  const p = PRESETS[i];
+  state.params = p.params;
+  state.precision = p.precision;
+  state.ctx = p.context;
+
+  document.getElementById('modelSizeSelect').value = '';
+  document.getElementById('customWrap').style.display = 'none';
+
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`preset_${i}`).classList.add('active');
+
+  document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
+  const pb = document.getElementById(`prec_${p.precision}`);
+  if (pb) pb.classList.add('active');
+
+  document.getElementById('ctxSlider').value = p.context;
+  onCtx(p.context);
+  calculate();
+}
+
+function onModelChange() {
+  const v = document.getElementById('modelSizeSelect').value;
+  const cw = document.getElementById('customWrap');
+  if (v === 'custom') { cw.style.display = ''; state.params = null; }
+  else { cw.style.display = 'none'; state.params = v ? parseFloat(v) : null; }
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+}
+
+function calcMemory(params, precisionId, overhead = 0.25) {
+  const prec = PRECISIONS.find(p => p.id === precisionId);
+  const base = params * 1e9 * prec.bytes / (1024 ** 3);
+  const withOverhead = base * (1 + overhead);
+  const ctxGB = (state.ctx * 2 * 4096 * 2) / (1024 ** 3);
+  return { base: parseFloat(base.toFixed(2)), total: parseFloat((withOverhead + ctxGB * 0.1).toFixed(2)), ctx: parseFloat(ctxGB.toFixed(2)) };
+}
+
+function getPerfHint(params, precisionId) {
+  const bytes = PRECISIONS.find(p => p.id === precisionId).bytes;
+  const score = (params * bytes);
+  if (score <= 4) return { label: 'Fast', color: '#10b981', pct: 85, toks: '25–80 tok/s' };
+  if (score <= 14) return { label: 'Moderate', color: '#f59e0b', pct: 50, toks: '5–25 tok/s' };
+  if (score <= 40) return { label: 'Slow', color: '#f97316', pct: 25, toks: '1–8 tok/s' };
+  return { label: 'Very Slow', color: '#ef4444', pct: 10, toks: '<2 tok/s' };
+}
+
+function getGPURecs(needed) {
+  return GPU_DB.filter(g => g.vram >= needed)
+    .sort((a, b) => a.vram - b.vram)
+    .slice(0, 4);
+}
+
+function getVerdictClass(needed, hw) {
+  if (hw === 'gpu') {
+    const maxConsumer = 24;
+    if (needed <= 12) return 'runnable';
+    if (needed <= maxConsumer) return 'borderline';
+    return 'notrun';
+  } else {
+    if (needed <= 32) return 'runnable';
+    if (needed <= 64) return 'borderline';
+    return 'notrun';
+  }
+}
+
+function calculate() {
+  let params = state.params;
+  if (!params) {
+    const sv = document.getElementById('modelSizeSelect').value;
+    if (sv && sv !== 'custom') params = parseFloat(sv);
+    const cv = document.getElementById('customB').value;
+    if (sv === 'custom' && cv) params = parseFloat(cv);
+  }
+  if (!params || isNaN(params)) return;
+
+  const mem = calcMemory(params, state.precision);
+  const perf = getPerfHint(params, state.precision);
+  const needed = parseFloat(mem.total.toFixed(1));
+  const vclass = getVerdictClass(needed, state.hw);
+  const gpuRecs = getGPURecs(needed);
+  const label = state.hw === 'gpu' ? 'VRAM' : 'RAM';
+
+  const verdictMap = {
+    runnable: { dot: 'dot-green', color: '#10b981', title: `✓ Runs on consumer hardware`, sub: `${needed} GB ${label} required — fits on mid-range ${state.hw.toUpperCase()}s` },
+    borderline: { dot: 'dot-amber', color: '#f59e0b', title: `⚡ Requires high-end hardware`, sub: `${needed} GB ${label} required — needs top-tier consumer ${state.hw.toUpperCase()}s` },
+    notrun: { dot: 'dot-red', color: '#ef4444', title: `✗ Needs datacenter / server GPU`, sub: `${needed} GB ${label} required — beyond consumer ${state.hw.toUpperCase()} limits` },
+  }[vclass];
+
+  const ramNeeded = state.hw === 'gpu' ? parseFloat((needed * 1.5).toFixed(1)) : needed;
+
+  let gpuSection = '';
+  if (state.hw === 'gpu' && gpuRecs.length > 0) {
+    const items = gpuRecs.map(g => {
+      const headroom = g.vram - needed;
+      const badge = headroom > 8 ? `<span class="gpu-badge badge-green">ideal</span>` : headroom > 0 ? `<span class="gpu-badge badge-amber">fits</span>` : `<span class="gpu-badge badge-red">tight</span>`;
+      return `<div class="gpu-item"><span class="gpu-name">${g.name}</span><span class="gpu-vram">${g.vram} GB VRAM</span>${badge}</div>`;
+    }).join('');
+    gpuSection = `<div class="gpu-recs"><div class="gpu-rec-title">Recommended GPUs</div><div class="gpu-list">${items}</div></div>`;
+  } else if (state.hw === 'gpu' && gpuRecs.length === 0) {
+    gpuSection = `<div class="gpu-recs"><div class="gpu-rec-title">Recommended GPUs</div><div style="font-size:12px;color:#ef4444;font-family:var(--font-mono);padding:8px 0">No single consumer GPU fits — consider multi-GPU or cloud inference</div></div>`;
+  }
+
+  const barColor = perf.color;
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('resultsContent').style.display = '';
+  document.getElementById('resultsContent').innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">${label} Required</div>
+        <div class="stat-value" style="color:var(--accent)">${needed}<span class="stat-unit">GB</span></div>
+        <div class="stat-hint">incl. 25% overhead + ctx</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Base Model Size</div>
+        <div class="stat-value" style="color:var(--accent2)">${mem.base}<span class="stat-unit">GB</span></div>
+        <div class="stat-hint">raw weights only</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">${state.hw === 'gpu' ? 'System RAM' : 'Swap / Disk'}</div>
+        <div class="stat-value" style="color:#a855f7">${ramNeeded}<span class="stat-unit">GB</span></div>
+        <div class="stat-hint">${state.hw === 'gpu' ? 'minimum system RAM' : 'pagefile recommended'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Est. Tokens/sec</div>
+        <div class="stat-value" style="color:${perf.color}">${perf.toks.split('–')[0]}<span class="stat-unit">–${(perf.toks.split('–')[1] || '').replace(' tok/s','')}</span></div>
+        <div class="stat-hint">GPU inference estimate</div>
+      </div>
+    </div>
+
+    <div class="section-gap">
+      <div class="verdict-card ${vclass}">
+        <div class="verdict-title"><div class="verdict-dot ${verdictMap.dot}"></div>${verdictMap.title}</div>
+        <div class="verdict-sub">${verdictMap.sub}</div>
+      </div>
+    </div>
+
+    <div class="section-gap">
+      <div class="perf-bar-wrap">
+        <div class="perf-label-row">
+          <span class="perf-label">inference performance</span>
+          <span class="perf-val" style="color:${barColor}">${perf.label}</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${perf.pct}%;background:${barColor}"></div></div>
+      </div>
+    </div>
+
+    ${gpuSection}
+  `;
+
+  buildCompare();
+}
+
+function buildCompare() {
+  const tbody = PRESETS.map((p, i) => {
+    const mem = calcMemory(p.params, p.precision);
+    const perf = getPerfHint(p.params, p.precision);
+    const vc = getVerdictClass(mem.total, 'gpu');
+    const dotC = vc === 'runnable' ? '#10b981' : vc === 'borderline' ? '#f59e0b' : '#ef4444';
+    return `<tr>
+      <td style="font-weight:500">${p.name}</td>
+      <td style="color:var(--muted)">${p.params}B · ${p.precision.toUpperCase()}</td>
+      <td style="color:var(--accent);font-family:var(--font-mono)">${mem.total.toFixed(1)} GB</td>
+      <td style="font-family:var(--font-mono);color:${perf.color}">${perf.label}</td>
+      <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dotC};box-shadow:0 0 6px ${dotC}"></span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('compareContent').innerHTML = `
+    <table class="compare-table">
+      <thead><tr><th>Model</th><th>Config</th><th>VRAM</th><th>Speed</th><th>Runnable</th></tr></thead>
+      <tbody>${tbody}</tbody>
+    </table>`;
+}
+
+initPresets();
+initPrec();
+buildCompare();
+</script>
